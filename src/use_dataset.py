@@ -84,6 +84,8 @@ def evaluate_dataset():
     execution_time = end_time - start_time
     logger.info(f"評価実験が完了しました。所要時間: {execution_time:.2f}秒")
 
+    return experiment_results
+
 
 if __name__ == "__main__":
     evaluate_dataset()
