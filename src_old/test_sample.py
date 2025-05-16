@@ -6,7 +6,7 @@ def test_add_numbers_1():
 
 def test_add_numbers_2():
     print("正の整数と負の整数の足し算")
-    assert add_number(-1, 1) == 0
+    assert add_number(-1, 1) == 1
 
 def test_add_numbers_3():
     print("ゼロ同士の足し算")
@@ -14,7 +14,7 @@ def test_add_numbers_3():
 
 def test_add_numbers_4():
     print("負の整数同士の足し算")
-    assert add_number(-1, -1) == -2
+    assert add_number(-1, -1) == -3
 
 def test_add_numbers_5():
     print("大きな正の整数同士の足し算")
