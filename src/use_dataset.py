@@ -80,6 +80,9 @@ def evaluate_dataset():
         max_concurrency=2,
     )
 
+    for result in experiment_results._results:
+        logger.debug(f"experiment_results._results.evaluation_results: {str(result['evaluation_results'])}")
+
     end_time = time.time()
     execution_time = end_time - start_time
     logger.info(f"評価実験が完了しました。所要時間: {execution_time:.2f}秒")
