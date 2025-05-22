@@ -6,7 +6,6 @@ import json
 from langsmith import wrappers, Client
 from pydantic import BaseModel, Field
 from openai import OpenAI
-from logger import logger
 import time
 
 
@@ -18,11 +17,10 @@ def target(inputs: dict) -> dict:
     question = inputs["question"]
     for item in stock_data:
         if item.get("query") == question:
-            logger.debug(f"一致するクエリが見つかりました: {question[:50]}...{item.get('message')[:50]}...")
             return {"response": item.get("message", "")}
     
     # 一致するクエリが見つからない場合は、ログ出力しておいてquestionをreturnする
-    logger.error(f"以下のquestionに一致するクエリが見つかりませんでした: {question[:50]}...")
+    print(f"以下のquestionに一致するクエリが見つかりませんでした: {question[:50]}...")
     return {"response": question[:50]}
 
 
@@ -54,12 +52,10 @@ def accuracy(outputs: dict, reference_outputs: dict) -> bool:
         response_format=Grade,
     )
     score = response.choices[0].message.parsed.score
-    logger.debug(f"正確性評価が完了しました。スコア: {score}")
     return score
 
 
 def evaluate_dataset():
-    logger.info("評価実験を開始します...")
     start_time = time.time()
 
     #環境設定########################################################################################
@@ -82,12 +78,11 @@ def evaluate_dataset():
 
     scores = []
     for result in experiment_results._results:
-        logger.debug(f"score: {str(result['evaluation_results']['results'][0].score)}")
         scores.append(result["evaluation_results"]["results"][0].score)
 
     end_time = time.time()
     execution_time = end_time - start_time
-    logger.info(f"評価実験が完了しました。所要時間: {execution_time:.2f}秒")
+    print(f"評価実験が完了しました。所要時間: {execution_time:.2f}秒")
 
     return scores
 
