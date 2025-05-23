@@ -87,6 +87,7 @@ def evaluate_dataset():
     execution_time = end_time - start_time
     print(f"評価実験が完了しました。所要時間: {execution_time:.2f}秒")
     print(f"平均スコア: {sum(scores) / len(scores) if scores else 0:.2f}")
+    print(f"個々のスコア: {scores}")
 
     return scores
 
