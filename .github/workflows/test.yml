@@ -30,5 +30,6 @@ jobs:
           score=$(python -u src/use_dataset.py)
           echo "score=$score" >> $GITHUB_OUTPUT
 
-      - name: show average score
-        run: echo "${{ steps.run.outputs.score }}"
+      - env:
+          score: ${{ steps.run.outputs.score }}
+        run: echo "${score}"
