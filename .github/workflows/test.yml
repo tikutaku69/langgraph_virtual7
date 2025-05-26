@@ -25,11 +25,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: run
+      - name: Run and get average score
+        id: get_score
         run: |
           score=$(python -u src/use_dataset.py)
           echo "score=$score" >> $GITHUB_OUTPUT
 
       - env:
-          score: ${{ steps.run.outputs.score }}
-        run: echo "${score}"
+          RESULT: ${{ steps.get_score.outputs.score }}
+        run: echo "${RESULT}"
