@@ -7,6 +7,13 @@ on:
         default: 90
         required: true
         description: 'Border score for evaluation'
+  push:
+    inputs:
+      border_score:
+        type: integer
+        default: 90
+        required: true
+        description: 'Border score for evaluation'
 jobs:
   sample:
     runs-on: ubuntu-latest
