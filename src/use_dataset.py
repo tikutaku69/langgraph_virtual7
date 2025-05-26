@@ -59,7 +59,7 @@ def accuracy(student_answer, ground_truth) -> int:
 
 def evaluate_dataset():
     start_time = time.time()
-    # print(f"評価実験を開始します。")
+    print(f"評価実験を開始します。")
 
     # 環境設定
     load_dotenv()
@@ -87,10 +87,10 @@ def evaluate_dataset():
 
     end_time = time.time()
     execution_time = end_time - start_time
-    # print(f"評価実験が完了しました。所要時間: {execution_time:.2f}秒")
+    print(f"評価実験が完了しました。所要時間: {execution_time:.2f}秒")
+    print(f"個々のスコア: {scores}")
     average_score = int(sum(scores) / len(scores)) if scores else 0
     print(average_score)
-    # print(f"個々のスコア: {scores}")
 
     return scores
 
