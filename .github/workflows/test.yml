@@ -2,18 +2,11 @@ name: Test
 on:
   workflow_dispatch:
     inputs:
-      border_score:
-        type: integer
+      border:
+        type: number
         default: 90
         required: true
-        description: 'Border score for evaluation'
-  push:
-    inputs:
-      border_score:
-        type: integer
-        default: 90
-        required: true
-        description: 'Border score for evaluation'
+        description: Border score for evaluation
 jobs:
   sample:
     runs-on: ubuntu-latest
@@ -50,4 +43,4 @@ jobs:
         run: echo "${RESULT}"
 
       - name: show border score
-        run: echo "${{ inputs.border_score }}"
+        run: echo "${{ inputs.border }}"
