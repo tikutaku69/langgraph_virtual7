@@ -28,7 +28,7 @@ instructions = """生徒の答えをGround Truthと比較して、概念の類�
 
 def accuracy(student_answer, ground_truth) -> int:
     api_key = os.getenv("OPENAI_API_KEY")
-    openai_client = OpenAI()
+    openai_client = OpenAI(api_key=api_key)
     response = openai_client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
