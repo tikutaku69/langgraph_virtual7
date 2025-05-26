@@ -1,12 +1,5 @@
 name: Test
-on:
-  workflow_dispatch:
-    inputs:
-      border:
-        type: number
-        default: 90
-        required: true
-        description: Border score for evaluation
+on: push
 jobs:
   sample:
     runs-on: ubuntu-latest
@@ -41,6 +34,3 @@ jobs:
       - env:
           RESULT: ${{ steps.get_score.outputs.score }}
         run: echo "${RESULT}"
-
-      - name: show border score
-        run: echo "${{ inputs.border }}"
