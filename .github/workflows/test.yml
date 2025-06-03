@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      BORDER_SCORE: ${{ vars.BORDER_SCORE }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -34,3 +35,6 @@ jobs:
       - env:
           RESULT: ${{ steps.get_score.outputs.score }}
         run: echo "${RESULT}"
+
+      - name: Install dependencies
+        run: echo "${BORDER_SCORE}"
