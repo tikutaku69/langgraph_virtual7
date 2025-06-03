@@ -36,6 +36,12 @@ jobs:
         run: |
           if (( $(echo "${{ steps.get_score.outputs.score }} >= ${{ env.BORDER_SCORE }}" | bc -l) )); then
             echo "safe"
-          else
-            echo "problem!"
-          fi
+
+      - name: Create issue if score is below border
+        run: |
+          if (( $(echo "${{ steps.get_score.outputs.score }} < ${{ env.BORDER_SCORE }}" | bc -l) )); then
+            gh issue create \
+              --title "平均スコアが閾値を下回ってます（$(date +'%Y-%m-%d')" \
+              --body "テスト"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
