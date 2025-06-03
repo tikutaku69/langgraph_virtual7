@@ -39,9 +39,9 @@ jobs:
       - name: Check score against border
         run: |
           if (( $(echo "${{ steps.get_score.outputs.score }} < ${{ env.BORDER_SCORE }}" | bc -l) )); then
-        echo "problem!"
+            echo "problem!"
           else
-        echo "safe"
+            echo "safe"
           fi
 
       - name: Install dependencies
