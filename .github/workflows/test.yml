@@ -32,17 +32,10 @@ jobs:
           score=$(python -u src/use_dataset.py)
           echo "score=$score" >> $GITHUB_OUTPUT
 
-      - env:
-          RESULT: ${{ steps.get_score.outputs.score }}
-        run: echo "${RESULT}"
-
       - name: Check score against border
         run: |
-          if (( $(echo "${{ steps.get_score.outputs.score }} < ${{ env.BORDER_SCORE }}" | bc -l) )); then
-            echo "problem!"
-          else
+          if (( $(echo "${{ steps.get_score.outputs.score }} >= ${{ env.BORDER_SCORE }}" | bc -l) )); then
             echo "safe"
+          else
+            echo "problem!"
           fi
-
-      - name: Install dependencies
-        run: echo "${BORDER_SCORE}"
