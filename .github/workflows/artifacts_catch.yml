@@ -38,4 +38,13 @@ jobs:
 
       - name: Show artifact content
         run: |
+          echo "ファイル構造:"
           ls -R
+          echo "ファイルの内容:"
+          find . -type f -not -path "*/\.*" -not -name "*.zip" | while read file; do
+            echo "===================="
+            echo "FILE: $file"
+            echo "===================="
+            cat "$file"
+            echo ""
+          done
