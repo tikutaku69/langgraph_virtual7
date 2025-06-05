@@ -21,23 +21,13 @@ jobs:
         run: |
           artifact_url="https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ steps.get_run.outputs.run_id }}/artifacts"
           curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $artifact_url > artifacts.json
-          cat artifacts.json
           url=$(jq -r '.artifacts[] | select(.name=="uploaded") | .archive_download_url' artifacts.json)
-          if [ -z "$url" ]; then
-            echo "Error: No download URL found for artifact 'uploaded'"
-            echo "Available artifacts:"
-            jq -r '.artifacts[].name' artifacts.json
-            exit 1
-          fi
           echo "download_url=$url" >> $GITHUB_OUTPUT
-          echo "Debug: download_url is $url"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download artifact zip
-        if: steps.get_artifacts.outputs.download_url != ''
         run: |
-          echo "Downloading from: ${{ steps.get_artifacts.outputs.download_url }}"
           curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             "${{ steps.get_artifacts.outputs.download_url }}" \
             --output artifact.zip
