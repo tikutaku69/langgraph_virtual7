@@ -1,0 +1,53 @@
+name: Test
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run test_main.py
+        run: python -u src_old/test_*.py
+  evaluation_score:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      BORDER_SCORE: ${{ vars.BORDER_SCORE }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run and get average score
+        id: get_score
+        run: |
+          score=$(python -u src/use_dataset.py)
+          echo "score=$score" >> $GITHUB_OUTPUT
+
+      - name: Check score against border
+        run: |
+          if (( $(echo "${{ steps.get_score.outputs.score }} >= ${{ env.BORDER_SCORE }}" | bc -l) )); then
+            echo "safe"
+          fi
+
+      - name: Create issue if score is below border
+        run: |
+          if (( $(echo "${{ steps.get_score.outputs.score }} < ${{ env.BORDER_SCORE }}" | bc -l) )); then
+            gh issue create \
+              --title "平均スコアが閾値を下回ってます（$(date +'%Y-%m-%d')" \
+              --body "テスト"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
