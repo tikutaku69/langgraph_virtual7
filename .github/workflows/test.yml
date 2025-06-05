@@ -12,6 +12,8 @@ jobs:
         run: python -u src_old/test_*.py
   evaluation_score:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       BORDER_SCORE: ${{ vars.BORDER_SCORE }}
