@@ -1,0 +1,48 @@
+name: Artifacts_Catch
+on: workflow_dispatch
+jobs:
+  download_artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: アーティファクトを持つ最新のワークフローランを取得
+        id: get_run
+        run: |
+          run_id=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/actions/runs \
+            | jq '.workflow_runs[] | select(.name=="Artifacts") | .id' | head -n 1)
+          echo "run_id=$run_id" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: アーティファクトリストを取得
+        id: get_artifacts
+        run: |
+          artifact_url="https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ steps.get_run.outputs.run_id }}/artifacts"
+          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $artifact_url > artifacts.json
+          cat artifacts.json
+          url=$(jq -r '.artifacts[] | select(.name=="uploaded") | .archive_download_url' artifacts.json)
+          echo "download_url=$url" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: アーティファクトZIPをダウンロード
+        run: |
+          curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "${{ steps.get_artifacts.outputs.download_url }}" \
+            --output artifact.zip
+          unzip artifact.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: アーティファクトの内容を表示
+        run: |
+          echo "ファイル構造:"
+          ls -R
+          echo "ファイルの内容:"
+          find . -type f -not -path "*/\.*" -not -name "*.zip" | while read file; do
+            echo "===================="
+            echo "FILE: $file"
+            echo "===================="
+            cat "$file"
+            echo ""
+          done
