@@ -23,6 +23,7 @@ jobs:
           curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" $artifact_url > artifacts.json
           url=$(jq -r '.artifacts[] | select(.name=="uploaded") | .archive_download_url' artifacts.json)
           echo "download_url=$url" >> $GITHUB_OUTPUT
+          echo "Debug: download_url is $url"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
